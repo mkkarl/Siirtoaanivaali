@@ -26,7 +26,7 @@ public class Kayttoliittyma {
         
         this.logiikka = new Logiikka();
         
-        logiikka.laskeAanet(tiedosto);
+        logiikka.aantenLasku(tiedosto);
         logiikka.tulostaLuetutTiedot();
         
     }

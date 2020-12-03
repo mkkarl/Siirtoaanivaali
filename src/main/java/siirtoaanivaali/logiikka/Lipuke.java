@@ -15,7 +15,7 @@ public class Lipuke {
 
     private int[] ehdokasJarjestys;
     private int ehdokasIndeksi;
-    private double aanikerroin;
+    private double aanimaara;
 
     public Lipuke(int ehdokasLkm, String rivi) {
         this.ehdokasJarjestys = new int[ehdokasLkm];
@@ -29,19 +29,19 @@ public class Lipuke {
         }
 
         ehdokasIndeksi = 0;
-        aanikerroin = 1.0;
+        aanimaara = 1.0;
     }
     
     public int getEhdokas() {
         return ehdokasJarjestys[ehdokasIndeksi];
     }
     
-    public double getAanikerroin() {
-        return aanikerroin;
+    public double getAanimaara() {
+        return aanimaara;
     }
     
     public void siirraAanetSeuraavalle(double siirtokerroin, List<Integer> valitut) {
-        aanikerroin *= siirtokerroin;
+        aanimaara *= siirtokerroin;
         
         while (true) {
             ehdokasIndeksi++;
