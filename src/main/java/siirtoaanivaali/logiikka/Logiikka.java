@@ -153,7 +153,7 @@ public class Logiikka {
                 // Siirretään ylijäämä-äänet
                 for (Lipuke lipuke : lipukkeet) {
                     if (valitut.contains(lipuke.getEhdokas())) {
-                        lipuke.siirraYlijaamaAanetSeuraavalle((aanet[lipuke.getEhdokas()] - aanikynnys) / lipukelaskuri[lipuke.getEhdokas()], valitut, eliminoidut);
+                        lipuke.siirraAanetSeuraavalle((aanet[lipuke.getEhdokas()] - aanikynnys) / lipukelaskuri[lipuke.getEhdokas()], valitut, eliminoidut);
                     }
                 }
             } else {
@@ -179,7 +179,7 @@ public class Logiikka {
                     //Siirretään eliminoidun äänet seuraavalle
                     for (Lipuke lipuke : lipukkeet) {
                         if (lipuke.getEhdokas() == eliminoitava) {
-                            lipuke.siirraEliminoidutAanetSeuraavalle(valitut, eliminoidut);
+                            lipuke.siirraAanetSeuraavalle(1.0, valitut, eliminoidut);
                         }
                     }
                 }

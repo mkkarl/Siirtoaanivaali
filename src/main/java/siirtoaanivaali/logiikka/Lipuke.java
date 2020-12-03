@@ -40,28 +40,16 @@ public class Lipuke {
         return aanimaara;
     }
 
-    public void siirraYlijaamaAanetSeuraavalle(double siirtokerroin, List<Integer> valitut, List<Integer> eliminoidut) {
+    public void siirraAanetSeuraavalle(double siirtokerroin, List<Integer> valitut, List<Integer> eliminoidut) {
         aanimaara *= siirtokerroin;
 
         while (true) {
             ehdokasIndeksi++;
-            
+
             if (ehdokasIndeksi >= ehdokasJarjestys.length) {
                 ehdokasIndeksi = ehdokasJarjestys.length - 1;
                 break;
             }
-
-            if (ehdokasJarjestys[ehdokasIndeksi] == 0
-                    || (!valitut.contains(ehdokasJarjestys[ehdokasIndeksi])
-                    && !eliminoidut.contains(ehdokasJarjestys[ehdokasIndeksi]))) {
-                break;
-            }
-        }
-    }
-    
-    public void siirraEliminoidutAanetSeuraavalle(List<Integer> valitut, List<Integer> eliminoidut) {
-        while (true) {
-            ehdokasIndeksi++;
 
             if (ehdokasJarjestys[ehdokasIndeksi] == 0
                     || (!valitut.contains(ehdokasJarjestys[ehdokasIndeksi])
