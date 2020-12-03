@@ -83,9 +83,18 @@ public class Logiikka {
 
     void laskeAanet() {
 
-        double aanikynnys = 1.0 * lipukkeetRaaka.size() / ehdokasLkm;
+        double aanikynnys = 1.0 * lipukkeetRaaka.size() / valittavatLkm;
+        
+        System.out.println("Äänikynnys: " + aanikynnys);
+
+        int kierros = 1;
 
         while (valitut.size() < valittavatLkm) {
+
+            System.out.println("Kierros " + kierros);
+            System.out.println("==============\n");
+
+            kierros++;
 
             //Lasketaan ehdokkaiden äänet
             double[] aanet = new double[ehdokasLkm + 1];
@@ -95,6 +104,13 @@ public class Logiikka {
                 aanet[ehdokas] += lipuke.getAanimaara();
 
             }
+
+            //tulostetaan kierroksen äänet
+            for (int i = 1; i <= ehdokasLkm; i++) {
+                System.out.println(ehdokkaat[i] + " " + aanet[i]);
+            }
+
+            System.out.println("");
 
             // Siirretään äänikynnyksen ylittäneet ehdokkaat tarkastelulistalle
             List<EhdokasAanet> vertailu = new ArrayList<>();
@@ -111,11 +127,14 @@ public class Logiikka {
 
             if (!vertailu.isEmpty()) {
 
+                System.out.println("Kierroksella valitut:");
+
                 // Jos tarkasteltavia ehdokkaita on korkeintaan vapaiden paikkoijen verran, valitaan kaikki
                 if (vertailu.size() <= valittavatLkm - valitut.size()) {
                     for (EhdokasAanet vertailtava : vertailu) {
                         valitut.add(vertailtava.getEhdokasNumero());
                         lipukelaskuri[vertailtava.getEhdokasNumero()]++;
+                        System.out.println(ehdokkaat[vertailtava.getEhdokasNumero()]);
                     }
                 } else { // Muuten valitaan eniten ääniä saaneet
                     Collections.shuffle(vertailu); // Tämä hoitaa mahdollisen arvonnan tarpeen
@@ -123,8 +142,9 @@ public class Logiikka {
                     Collections.reverse(valitut); // Kääntää järjestyksen suurimmasta pienimpään äänimäärään
 
                     for (int i = 0; i < valittavatLkm - valitut.size(); i++) {
-                        valitut.add(vertailu.get(i).getEhdokasNumero()); // entä jos viimeisen jälkeen tasapisteissä toinen? VAATII ARVONNAN JOS USEAMPIA
+                        valitut.add(vertailu.get(i).getEhdokasNumero());
                         lipukelaskuri[vertailu.get(i).getEhdokasNumero()]++;
+                        System.out.println(ehdokkaat[vertailu.get(i).getEhdokasNumero()]);
                     }
 
                 }
@@ -142,6 +162,9 @@ public class Logiikka {
 
                 eliminoidut.add(eliminoitava);
 
+                System.out.println("Eliminoidaan:");
+                System.out.println(ehdokkaat[eliminoitava]);
+
                 //Siirretään eliminoidun äänet seuraavalle
                 for (Lipuke lipuke : lipukkeet) {
                     if (lipuke.getEhdokas() == eliminoitava) {
@@ -149,7 +172,11 @@ public class Logiikka {
                     }
                 }
             }
+
+            System.out.println("");
         }
+
+        System.out.println("");
 
     }
 
