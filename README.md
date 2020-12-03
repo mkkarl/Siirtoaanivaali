@@ -1,6 +1,6 @@
 # Siirtoaanivaalin laskentaohjelma
 
-**Ohjelma on vielä keskeneräinen, eikä sitä tule käyttää ääntenlaskuun!!!**
+**Ohjelma on hyvin uusi ja sitä tulee käyttää tarkkaan sen toimintaa seuraten eikä sokeasti luottaa sen toimintaan.**
 
 Ohjelma on tarkoitettu TKO-äly ry:n noudattaman siirtoäänivaalin äänten laskemiseen.
 Sillä on tarkoitus laskea [OpaVote](https://www.opavote.com/)-sivustolta saatavan datan perusteella äänestyksen tulos.
