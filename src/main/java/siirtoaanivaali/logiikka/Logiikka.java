@@ -84,7 +84,7 @@ public class Logiikka {
     void laskeAanet() {
 
         double aanikynnys = 1.0 * lipukkeetRaaka.size() / valittavatLkm;
-        
+
         System.out.println("Äänikynnys: " + aanikynnys);
 
         int kierros = 1;
@@ -98,10 +98,12 @@ public class Logiikka {
 
             //Lasketaan ehdokkaiden äänet
             double[] aanet = new double[ehdokasLkm + 1];
+            int[] lipukelaskuri = new int[ehdokasLkm + 1];
 
             for (Lipuke lipuke : lipukkeet) {
                 int ehdokas = lipuke.getEhdokas();
                 aanet[ehdokas] += lipuke.getAanimaara();
+                lipukelaskuri[ehdokas]++;
 
             }
 
@@ -115,7 +117,6 @@ public class Logiikka {
             // Siirretään äänikynnyksen ylittäneet ehdokkaat tarkastelulistalle
             List<EhdokasAanet> vertailu = new ArrayList<>();
             List<EhdokasAanet> poistoVertailu = new ArrayList<>();
-            int[] lipukelaskuri = new int[ehdokasLkm + 1];
 
             for (int i = 1; i < aanet.length; i++) {
                 if (aanet[i] >= aanikynnys) {
@@ -133,7 +134,7 @@ public class Logiikka {
                 if (vertailu.size() <= valittavatLkm - valitut.size()) {
                     for (EhdokasAanet vertailtava : vertailu) {
                         valitut.add(vertailtava.getEhdokasNumero());
-                        lipukelaskuri[vertailtava.getEhdokasNumero()]++;
+//                        lipukelaskuri[vertailtava.getEhdokasNumero()]++;
                         System.out.println(ehdokkaat[vertailtava.getEhdokasNumero()]);
                     }
                 } else { // Muuten valitaan eniten ääniä saaneet
@@ -143,7 +144,7 @@ public class Logiikka {
 
                     for (int i = 0; i < valittavatLkm - valitut.size(); i++) {
                         valitut.add(vertailu.get(i).getEhdokasNumero());
-                        lipukelaskuri[vertailu.get(i).getEhdokasNumero()]++;
+//                        lipukelaskuri[vertailu.get(i).getEhdokasNumero()]++;
                         System.out.println(ehdokkaat[vertailu.get(i).getEhdokasNumero()]);
                     }
 
@@ -152,23 +153,33 @@ public class Logiikka {
                 // Siirretään ylijäämä-äänet
                 for (Lipuke lipuke : lipukkeet) {
                     if (valitut.contains(lipuke.getEhdokas())) {
-                        lipuke.siirraAanetSeuraavalle((aanet[lipuke.getEhdokas()] - aanikynnys) / lipukelaskuri[lipuke.getEhdokas()], valitut, eliminoidut);
+                        lipuke.siirraYlijaamaAanetSeuraavalle((aanet[lipuke.getEhdokas()] - aanikynnys) / lipukelaskuri[lipuke.getEhdokas()], valitut, eliminoidut);
                     }
                 }
             } else {
-                // Jos ei ehdokkaita tarkasteltavana, siirretään vähiten ääniä saaneen äänet seuraavalle ja lisätään ehdokas eliminoitujen listalle
-                Collections.shuffle(poistoVertailu); // Tämä hoitaa mahdollisen arvonnan tarpeen
-                int eliminoitava = Collections.min(poistoVertailu).getEhdokasNumero();
+                // Jos poistovertailussa jäljellä enää vain puuttuva määrä, valitaan loput
+                System.out.println("Valitaan jäljellä olevat:");
+                if (poistoVertailu.size() == valittavatLkm - valitut.size()) {
+                    for (int i = 0; i < poistoVertailu.size(); i++) {
+                        valitut.add(poistoVertailu.get(i).getEhdokasNumero());
+                        System.out.println(ehdokkaat[poistoVertailu.get(i).getEhdokasNumero()]);
+                    }
+                } else {
 
-                eliminoidut.add(eliminoitava);
+                    // Jos ei ehdokkaita tarkasteltavana, siirretään vähiten ääniä saaneen äänet seuraavalle ja lisätään ehdokas eliminoitujen listalle
+                    Collections.shuffle(poistoVertailu); // Tämä hoitaa mahdollisen arvonnan tarpeen
+                    int eliminoitava = Collections.min(poistoVertailu).getEhdokasNumero();
 
-                System.out.println("Eliminoidaan:");
-                System.out.println(ehdokkaat[eliminoitava]);
+                    eliminoidut.add(eliminoitava);
 
-                //Siirretään eliminoidun äänet seuraavalle
-                for (Lipuke lipuke : lipukkeet) {
-                    if (lipuke.getEhdokas() == eliminoitava) {
-                        lipuke.siirraAanetSeuraavalle((aanet[lipuke.getEhdokas()] - aanikynnys) / lipukelaskuri[lipuke.getEhdokas()], valitut, eliminoidut);
+                    System.out.println("Eliminoidaan:");
+                    System.out.println(ehdokkaat[eliminoitava]);
+
+                    //Siirretään eliminoidun äänet seuraavalle
+                    for (Lipuke lipuke : lipukkeet) {
+                        if (lipuke.getEhdokas() == eliminoitava) {
+                            lipuke.siirraEliminoidutAanetSeuraavalle(valitut, eliminoidut);
+                        }
                     }
                 }
             }
@@ -200,11 +211,11 @@ public class Logiikka {
         System.out.println("");
 
         System.out.println("Lipukkeiden lkm: " + lipukkeetRaaka.size());
-        System.out.println("Äänestyslipukkeet:");
+        System.out.println("Äänestyslipukkeet (OpaVote:n muodossa):");
         for (String lipuke : lipukkeetRaaka) {
             System.out.println(lipuke);
         }
-        System.out.println("Toinen");
+        System.out.println("Laskuohjelman muodossa:");
 
         for (Lipuke lipuke : lipukkeet) {
             System.out.println(lipuke.toString());
