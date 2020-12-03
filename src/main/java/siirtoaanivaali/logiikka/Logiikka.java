@@ -205,15 +205,15 @@ public class Logiikka {
         System.out.println("TAUSTATIEDOT");
         System.out.println("================");
         System.out.println("");
-        
+
         System.out.println("Vaalin nimi: " + vaalinNimi);
         System.out.println("Ehdokkaiden määrä: " + ehdokasLkm);
         System.out.println("Valittavien määrä: " + valittavatLkm);
         System.out.println("");
 
         System.out.println("Ehdokkaat:");
-        for (String ehdokas : ehdokkaat) {
-            System.out.println(ehdokas);
+        for (int i = 1; i < ehdokkaat.length; i++) {
+            System.out.println(i + "\t" + ehdokkaat[i]);
         }
         System.out.println("");
 
