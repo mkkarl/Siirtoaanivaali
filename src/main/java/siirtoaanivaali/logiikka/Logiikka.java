@@ -99,7 +99,7 @@ public class Logiikka {
             // Siirretään äänikynnyksen ylittäneet ehdokkaat tarkastelulistalle
             List<EhdokasAanet> vertailu = new ArrayList<>();
             List<EhdokasAanet> poistoVertailu = new ArrayList<>();
-            int[] lipukelaskuri = new int[ehdokasLkm];
+            int[] lipukelaskuri = new int[ehdokasLkm + 1];
 
             for (int i = 1; i < aanet.length; i++) {
                 if (aanet[i] >= aanikynnys) {
@@ -118,12 +118,15 @@ public class Logiikka {
                         lipukelaskuri[vertailtava.getEhdokasNumero()]++;
                     }
                 } else { // Muuten valitaan eniten ääniä saaneet
-                    Collections.sort(vertailu);
+                    Collections.shuffle(vertailu); // Tämä hoitaa mahdollisen arvonnan tarpeen
+                    Collections.sort(vertailu); // Järjestää pienimmästä suurimpaan äänimäärään
+                    Collections.reverse(valitut); // Kääntää järjestyksen suurimmasta pienimpään äänimäärään
 
                     for (int i = 0; i < valittavatLkm - valitut.size(); i++) {
                         valitut.add(vertailu.get(i).getEhdokasNumero()); // entä jos viimeisen jälkeen tasapisteissä toinen? VAATII ARVONNAN JOS USEAMPIA
                         lipukelaskuri[vertailu.get(i).getEhdokasNumero()]++;
                     }
+
                 }
 
                 // Siirretään ylijäämä-äänet
@@ -134,7 +137,8 @@ public class Logiikka {
                 }
             } else {
                 // Jos ei ehdokkaita tarkasteltavana, siirretään vähiten ääniä saaneen äänet seuraavalle ja lisätään ehdokas eliminoitujen listalle
-                int eliminoitava = Collections.min(poistoVertailu).getEhdokasNumero(); // VAATII ARVONNAN JOS USEAMPIA
+                Collections.shuffle(poistoVertailu); // Tämä hoitaa mahdollisen arvonnan tarpeen
+                int eliminoitava = Collections.min(poistoVertailu).getEhdokasNumero();
 
                 eliminoidut.add(eliminoitava);
 
