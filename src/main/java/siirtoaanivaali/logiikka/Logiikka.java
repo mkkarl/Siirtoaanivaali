@@ -158,8 +158,9 @@ public class Logiikka {
                 }
             } else {
                 // Jos poistovertailussa jäljellä enää vain puuttuva määrä, valitaan loput
-                System.out.println("Valitaan jäljellä olevat:");
+
                 if (poistoVertailu.size() == valittavatLkm - valitut.size()) {
+                    System.out.println("Valitaan jäljellä olevat:");
                     for (int i = 0; i < poistoVertailu.size(); i++) {
                         valitut.add(poistoVertailu.get(i).getEhdokasNumero());
                         System.out.println(ehdokkaat[poistoVertailu.get(i).getEhdokasNumero()]);
@@ -199,6 +200,12 @@ public class Logiikka {
     }
 
     public void tulostaLuetutTiedot() {
+        System.out.println("");
+        System.out.println("================");
+        System.out.println("TAUSTATIEDOT");
+        System.out.println("================");
+        System.out.println("");
+        
         System.out.println("Vaalin nimi: " + vaalinNimi);
         System.out.println("Ehdokkaiden määrä: " + ehdokasLkm);
         System.out.println("Valittavien määrä: " + valittavatLkm);

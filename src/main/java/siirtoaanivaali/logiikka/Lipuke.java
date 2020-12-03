@@ -45,6 +45,11 @@ public class Lipuke {
 
         while (true) {
             ehdokasIndeksi++;
+            
+            if (ehdokasIndeksi >= ehdokasJarjestys.length) {
+                ehdokasIndeksi = ehdokasJarjestys.length - 1;
+                break;
+            }
 
             if (ehdokasJarjestys[ehdokasIndeksi] == 0
                     || (!valitut.contains(ehdokasJarjestys[ehdokasIndeksi])
