@@ -21,6 +21,12 @@ public class Kayttoliittyma {
         this.lukija = new Scanner(System.in);
     }
 
+    public void kaynnista(String tiedosto) {
+        this.logiikka = new Logiikka();
+        logiikka.aantenLasku(tiedosto);
+        logiikka.tulostaLuetutTiedot();
+    }
+
     public void kaynnista() {
         System.out.println("Anna tiedostonimi:");
         String tiedosto = lukija.nextLine();
