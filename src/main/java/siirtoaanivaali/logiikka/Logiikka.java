@@ -26,11 +26,14 @@ public class Logiikka {
     private String[] ehdokkaat;
     private String vaalinNimi;
     private List<Integer> valitut;
+    private List<Integer> eliminoidut;
 
     public Logiikka() {
 //        this.tiedostonlukija = new Scanner(tiedosto);
         this.lipukkeetRaaka = new ArrayList<>();
         this.lipukkeet = new ArrayList<>();
+        this.valitut = new ArrayList<>();
+        this.eliminoidut = new ArrayList<>();
     }
 
     public void aantenLasku(String tiedosto) {
@@ -38,21 +41,9 @@ public class Logiikka {
 
         lueTiedosto();
         luoLipukkeet();
+        laskeAanet();
+        tulostaValitut();
 
-        double aanikynnys = 1.0 * lipukkeetRaaka.size() / ehdokasLkm;
-
-        double[] aanet = new double[ehdokasLkm + 1];
-
-        for (Lipuke lipuke : lipukkeet) {
-            int ehdokas = lipuke.getEhdokas();
-            aanet[ehdokas] += lipuke.getAanimaara();
-        }
-
-        for (int i = 1; i < aanet.length; i++) {
-            if (aanet[i] >= aanikynnys && !valitut.contains(i)) {
-                valitut.add(i);
-            }
-        }
     }
 
     void lueTiedosto() {
@@ -94,7 +85,7 @@ public class Logiikka {
 
         double aanikynnys = 1.0 * lipukkeetRaaka.size() / ehdokasLkm;
 
-        while (valitut.size() <= valittavatLkm) {
+        while (valitut.size() < valittavatLkm) {
 
             //Lasketaan ehdokkaiden äänet
             double[] aanet = new double[ehdokasLkm + 1];
@@ -107,10 +98,15 @@ public class Logiikka {
 
             // Siirretään äänikynnyksen ylittäneet ehdokkaat tarkastelulistalle
             List<EhdokasAanet> vertailu = new ArrayList<>();
+            List<EhdokasAanet> poistoVertailu = new ArrayList<>();
             int[] lipukelaskuri = new int[ehdokasLkm];
 
             for (int i = 1; i < aanet.length; i++) {
-                vertailu.add(new EhdokasAanet(ehdokasLkm, aanet[i]));
+                if (aanet[i] >= aanikynnys) {
+                    vertailu.add(new EhdokasAanet(i, aanet[i]));
+                } else if (aanet[i] < aanikynnys && !eliminoidut.contains(i) && !valitut.contains(i)) {
+                    poistoVertailu.add(new EhdokasAanet(i, aanet[i]));
+                }
             }
 
             if (!vertailu.isEmpty()) {
@@ -125,7 +121,7 @@ public class Logiikka {
                     Collections.sort(vertailu);
 
                     for (int i = 0; i < valittavatLkm - valitut.size(); i++) {
-                        valitut.add(vertailu.get(i).getEhdokasNumero()); // entä jos viimeisen jälkeen tasapisteissä toinen?
+                        valitut.add(vertailu.get(i).getEhdokasNumero()); // entä jos viimeisen jälkeen tasapisteissä toinen? VAATII ARVONNAN JOS USEAMPIA
                         lipukelaskuri[vertailu.get(i).getEhdokasNumero()]++;
                     }
                 }
@@ -133,15 +129,31 @@ public class Logiikka {
                 // Siirretään ylijäämä-äänet
                 for (Lipuke lipuke : lipukkeet) {
                     if (valitut.contains(lipuke.getEhdokas())) {
-                        lipuke.siirraAanetSeuraavalle((aanet[lipuke.getEhdokas()] - aanikynnys) / lipukelaskuri[lipuke.getEhdokas()], valitut);
+                        lipuke.siirraAanetSeuraavalle((aanet[lipuke.getEhdokas()] - aanikynnys) / lipukelaskuri[lipuke.getEhdokas()], valitut, eliminoidut);
                     }
                 }
             } else {
                 // Jos ei ehdokkaita tarkasteltavana, siirretään vähiten ääniä saaneen äänet seuraavalle ja lisätään ehdokas eliminoitujen listalle
-                
+                int eliminoitava = Collections.min(poistoVertailu).getEhdokasNumero(); // VAATII ARVONNAN JOS USEAMPIA
+
+                eliminoidut.add(eliminoitava);
+
+                //Siirretään eliminoidun äänet seuraavalle
+                for (Lipuke lipuke : lipukkeet) {
+                    if (lipuke.getEhdokas() == eliminoitava) {
+                        lipuke.siirraAanetSeuraavalle((aanet[lipuke.getEhdokas()] - aanikynnys) / lipukelaskuri[lipuke.getEhdokas()], valitut, eliminoidut);
+                    }
+                }
             }
         }
 
+    }
+
+    void tulostaValitut() {
+        System.out.println("Valitut:");
+        for (int i = 0; i < valitut.size(); i++) {
+            System.out.println((i + 1) + " " + ehdokkaat[valitut.get(i)]);
+        }
     }
 
     public void tulostaLuetutTiedot() {

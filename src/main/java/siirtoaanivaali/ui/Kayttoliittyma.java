@@ -13,22 +13,23 @@ import siirtoaanivaali.logiikka.Logiikka;
  * @author mari
  */
 public class Kayttoliittyma {
+
     private Scanner lukija;
     private Logiikka logiikka;
-    
+
     public Kayttoliittyma() {
         this.lukija = new Scanner(System.in);
     }
-    
+
     public void kaynnista() {
         System.out.println("Anna tiedostonimi:");
         String tiedosto = lukija.nextLine();
-        
+
         this.logiikka = new Logiikka();
-        
+
         logiikka.aantenLasku(tiedosto);
         logiikka.tulostaLuetutTiedot();
-        
+
     }
-    
+
 }
